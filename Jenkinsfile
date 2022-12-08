@@ -1,17 +1,21 @@
 
 
 pipeline {
-  agent {
-    kubernetes {
-      	cloud 'kubernetes'
-      	defaultContainer 'jnlp'
+  
+  agent any
+
+  stages {
+    stage('Install kubectl'){
+      steps{
+       sh 'curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl'
+       sh 'chmod +x ./kubectl && mv kubectl /usr/local/sbin'
       }
     }
-  stages {
     stage('Deploy App') {
       steps {
-        script {
-          kubernetesDeploy(configs: "k8s-nginx-service-deploy.yaml", kubeconfigId: "MINIKUBE")
+        withKubeConfig(credentialsId: 'KUBECONFIG') {
+          sh "kubectl get nodes"
+          sh "kubectl get pods"
         }
       }
     }
