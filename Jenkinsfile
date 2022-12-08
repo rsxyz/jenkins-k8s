@@ -1,17 +1,13 @@
 
 
 pipeline {
-
-  agent any
-
-  stages {
-
-    stage('Checkout Source') {
-      steps {
-        git url:'https://github.com/rsxyz/jenkins-k8s.git', branch:'main'
+  agent {
+    kubernetes {
+      	cloud 'kubernetes'
+      	defaultContainer 'jnlp'
       }
     }
-
+  stages {
     stage('Deploy App') {
       steps {
         script {
@@ -19,7 +15,8 @@ pipeline {
         }
       }
     }
-
   }
-
 }
+
+
+
