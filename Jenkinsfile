@@ -16,6 +16,9 @@ pipeline {
         withKubeConfig(credentialsId: 'KUBECONFIG') {
           sh "kubectl get nodes"
           sh "kubectl get pods"
+          sh "cat k8s-deployment_service.yaml"
+          sh "kubectl  apply -f k8s-nginx-service-deploy.yaml"
+          sh "kubectl get all"
         }
       }
     }
